@@ -8,7 +8,8 @@ Modified from https://github.com/GLAY-AK2/NTRIP-server-for-Arduino
 ## Hardware
 
 The intended hardware is an Arduino Uno, and Ethernet Shield V2, and a SimpleRTK2B stacked on top of each other.
-Note that some insulation (be that some tape or an arduino shield plastic base) is required to stop the ethernet and GPS shields shorting between solder joints.
+
+*Note that some insulation is required* (be that some tape or an arduino shield plastic base) to stop the ethernet and GPS shields shorting between solder joints.
 
 <img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/uno_stacked.png" height="400">
 
