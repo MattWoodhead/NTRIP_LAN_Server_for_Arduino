@@ -8,4 +8,7 @@ Note that some insulation (be that some tape or an arduino shield plastic base) 
 
 ![uno_shields_stacked](https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/uno_stacked.png)
 
+<img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/uno_stacked.png" height="300">
+
+
 Modified from https://github.com/GLAY-AK2/NTRIP-server-for-Arduino
