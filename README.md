@@ -7,12 +7,12 @@ This was originally modified from https://github.com/GLAY-AK2/NTRIP-server-for-A
 ## Hardware
 
 The intended hardware is an Arduino Mega 2560, and Ethernet Shield V2, and a SimpleRTK2B stacked on top of each other.
+
 It may be possible to use an Arduino Uno if UART1 from the SimpleRTK2B is used, however this is currently untested.
 
 **Note that some insulation is required** (be that some tape or an arduino shield plastic base) to stop the ethernet and GPS shields shorting between solder joints.
 
-<img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/mega_stacked.png" height="300">
-<img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/simplertk2b_uart_to_mega.PNG" height="300">
+<img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/mega_stacked.png" height="300"><img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/simplertk2b_uart_to_mega.PNG" height="300">
 
 ## Getting started
 
