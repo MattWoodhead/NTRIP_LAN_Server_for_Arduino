@@ -11,8 +11,8 @@ The intended hardware is an Arduino Uno, and Ethernet Shield V2, and a SimpleRTK
 
 **Note that some insulation is required** (be that some tape or an arduino shield plastic base) to stop the ethernet and GPS shields shorting between solder joints.
 
-<img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/mega_stacked.png" height="400">
-<img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/simplertk2b_uart_to_mega.PNG" height="400">
+<img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/mega_stacked.png" height="300">
+<img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/simplertk2b_uart_to_mega.PNG" height="300">
 
 ## Getting started
 
