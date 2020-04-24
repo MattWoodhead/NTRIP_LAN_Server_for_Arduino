@@ -6,71 +6,78 @@
  */
 
 #include "NTRIPServer.h"
-#include "SoftwareSerial.h"
+//#include "SoftwareSerial.h"
+#include <Ethernet.h>
+#include <SPI.h>
 
-#include "NTRIPConfig.h"  // This is where the caster address, port, mopuntpoint, password etc are stored.
+// This is where the caster address, port, mopuntpoint, password etc are stored.
+#include "NTRIPConfig.h"                                               
 
-// Setup software serial port to receive UART2 communication from the SimpleRTK2b
-SoftwareSerial RtcmSerial(8, 2); // RX, TX
+// SimpleRTK2B RX2 is connected to Mega RX1 (19)
+HardwareSerial & RtcmSerial = Serial1;                              // this is assigning a name to the serial 1 port
 
 // Randomly generated at https://www.hellion.org.uk/cgi-bin/randmac.pl 
-byte mac_address[] = {0x34,0x61,0x3a,0x62,0x31,0x3a};
+const byte mac_address[] = {0xA8,0x61,0x0a,0xAE,0x7E,0x6C};
+char char_buffer[512];                                                // buffer into which we will read the RtcmSerial port
+int char_count = 0;                                                   // counter to keep track of buffer length
 
-NTRIPServer ntrip_s;  // Create an 
+NTRIPServer ntrip_s;                                                  // Create an instance of the NTRIPServer class
 
 void setup() {
-  // put your setup code here, to run once:
-
-  Serial.begin(115200);
-  RtcmSerial.begin(38400);  //57600 causes issues - crashes arduino uno during ethernet connection
   delay(500);
+  Serial.begin(115200);
+  Serial.println(F("Starting..."));
+  RtcmSerial.begin(115200);                                            //57600 causes issues - crashes arduino uno during ethernet connection
+  delay(250);
   
+  pinMode(4, OUTPUT);
+  digitalWrite(4, HIGH);                                              // disable SD card
+  
+  delay(250);
+
   Ethernet.begin(mac_address);
-  while (Ethernet.linkStatus() == LinkOFF) {
+  delay(100);
+  while (Ethernet.linkStatus() == LinkOFF) {                        // Wait for ethernet to connect
     delay(500);
     Serial.print(".");
   }
 
-  Serial.println("LAN connected");
-  Serial.println("IP address: ");
+  Serial.println(F("LAN connected"));
+  Serial.print(F("IP: "));
   Serial.println(Ethernet.localIP());
 
-  Serial.println("Subscribing MountPoint");
   delay(100);
   if (!ntrip_s.subStation(host, httpPort, mountPoint, password, sourceString)) {
     delay(15000);
   }
-  Serial.println("Subscribing MountPoint is OK");
+  Serial.println(F("MountPoint Subscribed"));
 }
 
-char ch[512];
-int readcount;
-
 void loop() {
-  // put your main code here, to run repeatedly:
   if (ntrip_s.connected()) {
     while (RtcmSerial.available()) {
-      readcount = 0;
-      while (RtcmSerial.available()) {
-        ch[readcount] = RtcmSerial.read();
-        readcount++;
-        if (readcount > 511)break;
-      }//buffering
-      ntrip_s.write((uint8_t*)ch, readcount);
+      char c = RtcmSerial.read();                                       // read in a byte as a character
+      char_buffer[char_count++] = c;                                    // add character to buffer and increment counter
+      if ((c == '\n') || (char_count == sizeof(char_buffer)-1)) {       // if the buffer gets full or we see the newline character
+        ntrip_s.write((uint8_t*)char_buffer, char_count);               // send buffer to the ntrip server
+        char_count = 0;                                                 // reset counter
+        for (int i=0;i<sizeof(char_buffer);i++){                        // wipe the buffer for the next loop
+          char_buffer[i] = " ";
+        //Serial.println(F("packet sent"));                             // for debugging only
+        }
+      }
     }
-  }
-  else {
+  } else {
     ntrip_s.stop();
-    Serial.println("reconnect");
-    Serial.println("Subscribing MountPoint");
+    Serial.println(F("reconnect"));
+    delay(1000);                                                        // prevents reconnect spam
     if (!ntrip_s.subStation(host, httpPort, mountPoint, password, sourceString)) {
       delay(100);
     }
     else {
-      Serial.println("Subscribing MountPoint is OK");
+      Serial.println(F("MountPoint Subscribed"));
       delay(10);
     }
-
   }
-  delay(10);  //server cycle
+  delay(5);                                                            //server cycle
 }

@@ -13,7 +13,7 @@
 
 class NTRIPServer : public EthernetClient{
   public :
-  bool subStation(char* host,int port,char* mntpnt,char* psw, char* info);      //request RAW data from Caster 
+  bool subStation(char* host,int port,char* mntpnt,char* psw, char* info);      //request RAW data from Caster
   //String makeOptionalSTR(char* dataFormat, char* details, char* carrier, char* navSys, char* network, country,char* lat,char*lon,char* nmea,char sol,char gen,comEnc,char* auth,fee,bitrate);
 };
 
