@@ -1,8 +1,7 @@
-/* This script ans the associated files allow and Arduino Uno and an Ethernet shield to act as an NTRIP Server.
- * The intended hardware is an Arduino Uno, and Ethernet Shield V2, and a SimpleRTK2B stacked on top of each other.
+/* This script and the associated files allow and Arduino Mega 2560 and an Ethernet shield to act as an NTRIP Server.
+ * See the documentation at https://github.com/MattWoodhead/NTRIP_LAN_Server_for_Arduino
  * 
- * Modified from https://github.com/GLAY-AK2/NTRIP-server-for-Arduino
- * Copyright GLAY-AK2, MattWoodhead
+ * Copyright MattWoodhead
  */
 
 #include "NTRIPServer.h"
