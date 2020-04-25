@@ -16,7 +16,9 @@ It may be possible to use an Arduino Uno if UART1 from the SimpleRTK2B is used, 
 
 **Note that some insulation is required** (be that some tape or an arduino shield plastic base) to stop the ethernet and GPS shields shorting between solder joints.
 
-<img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/mega_stacked.png" height="300">
+<p align="center">
+<img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/mega_stacked.png" height="400">
+</p>
 
 ## Getting started
 
@@ -38,4 +40,6 @@ It may be possible to use an Arduino Uno if UART1 from the SimpleRTK2B is used, 
 7. Add a connection between RX2 on the SimpleRTK2B and TX1 (Pin 19) on the Mega 2560.
 8. Disconnect the USB cable to your PC.
 
+<p align="center">
 <img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/5V_Power_Bridging.PNG" height="400">        <img src="https://github.com/MattWoodhead/NTRIP_LAN_Client_for_Arduino/blob/master/simplertk2b_uart_to_mega.PNG" height="400">
+</p>
