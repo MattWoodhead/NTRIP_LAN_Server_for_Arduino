@@ -17,7 +17,8 @@
 HardwareSerial & RtcmSerial = Serial1;                              // this is assigning a name to the serial 1 port
 
 // Randomly generated at https://www.hellion.org.uk/cgi-bin/randmac.pl 
-const byte mac_address[] = {0xA8,0x61,0x0a,0xAE,0x7E,0x6C};
+const byte mac_address[] = {0xA8,0x61,0x0a,0xAE,0x7E,0x6C};           // Note: Newer boards come with a fixed MAC address
+byte ip_address[] = {192,168,1,184};                                        // Assign an IP address if DHCP is not available
 char char_buffer[512];                                                // buffer into which we will read the RtcmSerial port
 int char_count = 0;                                                   // counter to keep track of buffer length
 
@@ -38,7 +39,8 @@ void setup() {
   
   delay(250);
 
-  Ethernet.begin(mac_address);
+  Ethernet.begin(mac_address, ip_address);
+  //Ethernet.begin(mac_address);                                    // Use this one if using DHCP
   delay(100);
   while (Ethernet.linkStatus() == LinkOFF) {                        // Wait for ethernet to connect
     delay(500);
