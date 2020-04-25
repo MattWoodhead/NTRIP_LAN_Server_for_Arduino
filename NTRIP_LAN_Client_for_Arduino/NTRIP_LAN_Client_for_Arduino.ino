@@ -6,9 +6,7 @@
  */
 
 #include "NTRIPServer.h"
-//#include "SoftwareSerial.h"
 #include <Ethernet.h>
-#include <SPI.h>
 
 // This is where the caster address, port, mopuntpoint, password etc are stored.
 #include "NTRIPConfig.h"                                               
@@ -39,8 +37,8 @@ void setup() {
   
   delay(250);
 
-  Ethernet.begin(mac_address, ip_address);
-  //Ethernet.begin(mac_address);                                    // Use this one if using DHCP
+  //Ethernet.begin(mac_address, ip_address);
+  Ethernet.begin(mac_address);                                    // Use this one if using DHCP
   delay(100);
   while (Ethernet.linkStatus() == LinkOFF) {                        // Wait for ethernet to connect
     delay(500);
