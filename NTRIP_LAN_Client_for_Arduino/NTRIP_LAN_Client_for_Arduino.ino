@@ -34,13 +34,13 @@ void setup() {
   pinMode(4, OUTPUT);
   digitalWrite(4, HIGH);                                              // disable SD card
 
-  pinMode(13, OUTPUT);
-  digitalWrite(13, LOW);                                              // led
+//  pinMode(13, OUTPUT);
+//  digitalWrite(13, LOW);                                              // led
   
   delay(250);
 
-  Ethernet.begin(mac_address, ip_address);
-  //Ethernet.begin(mac_address);                                    // Use this one if using DHCP
+  //Ethernet.begin(mac_address, ip_address);
+  Ethernet.begin(mac_address);                                    // Use this one if using DHCP
   delay(100);
   while (Ethernet.linkStatus() == LinkOFF) {                        // Wait for ethernet to connect
     delay(500);
@@ -60,7 +60,7 @@ void setup() {
 
 void loop() {
   if (ntrip_s.connected()) {
-    digitalWrite(13, HIGH);
+//    digitalWrite(13, HIGH);
     while (RtcmSerial.available()) {
       char c = RtcmSerial.read();                                       // read in a byte as a character
       char_buffer[char_count++] = c;                                    // add character to buffer and increment counter
@@ -74,7 +74,7 @@ void loop() {
       }
     }
   } else {
-    digitalWrite(13, LOW);
+//    digitalWrite(13, LOW);
     ntrip_s.stop();
     Serial.println(F("reconnect"));
     delay(1000);                                                        // prevents reconnect spam
