@@ -101,6 +101,10 @@ void loop() {
     }
   } else {                                                              // if ntrip connection fails
     ntrip_s.stop();                                                     // close current socket connection
+    char_count = 0;                                                     // reset the counter
+    for (unsigned int i=0;i<sizeof(char_buffer);i++){                   // wipe the buffer for the next loop
+      char_buffer[i] = " ";
+    }
     Serial.println(F("reconnect"));
     delay(1000);                                                        // prevents reconnect spam
     if (!ntrip_s.subStation(host, httpPort, mountPoint, password, sourceString)) {      // try to reconnect
