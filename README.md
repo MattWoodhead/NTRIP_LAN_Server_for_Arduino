@@ -2,7 +2,7 @@
 
 An NTRIP Server suitable for use with an Arduino Mega 2560 and an Ethernet shield, to act as an NTRIP Server to a caster such as www.rtk2go.com.
 
-This was originally modified from https://github.com/GLAY-AK2/NTRIP-server-for-Arduino
+This project uses a modified ntrip server class from  https://github.com/GLAY-AK2/NTRIP-server-for-Arduino
 
 ## Hardware
 
