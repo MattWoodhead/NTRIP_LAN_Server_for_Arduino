@@ -10,6 +10,8 @@
 // This is where the caster address, port, mopuntpoint, password etc are stored.
 #include "NTRIPConfig.h"                                               
 
+#define DEBUG false
+
 // SimpleRTK2B RX2 is connected to Mega RX1 (19)
 HardwareSerial & RtcmSerial = Serial1;                              // this is assigning a name to the serial 1 port
 
@@ -17,8 +19,8 @@ HardwareSerial & RtcmSerial = Serial1;                              // this is a
 const byte mac_address[] = {0xA8,0x61,0x0a,0xAE,0x7E,0x6C};           // Note: Newer boards come with a fixed MAC address
 byte ip_address[] = {192,168,1,184};                                  // Assign an IP address if DHCP is not available
 
-char char_buffer[256];                                                // buffer into which we will read the RtcmSerial port
-int char_count = 0;                                                   // counter to keep track of buffer length
+uint8_t byte_buffer[256];                                                // buffer into which we will read the RtcmSerial port
+int byte_count = 0;                                                   // counter to keep track of buffer length
 
 unsigned long previous_time = 0;                                      // timers to decide when to send 1008 message
 unsigned long latest_time = 0; 
@@ -30,6 +32,7 @@ const uint8_t rtcm1008[] = {                                          // This by
 0xd3,0x00,0x14,0x3f,0x00,0x00,0x0e,0x41,0x44,0x56,0x4e,0x55,0x4c,
 0x4c,0x41,0x4e,0x54,0x45,0x4e,0x4e,0x41,0x00,0x00,0x79,0x06,0x89
 };
+const uint8_t newline_byte = byte('\n');
 
 NTRIPServer ntrip_s;                                                  // Create an instance of the NTRIPServer class
 
@@ -68,27 +71,29 @@ void setup() {
 void loop() {
   if (ntrip_s.connected()) {
     while (RtcmSerial.available()) {
-      char c = RtcmSerial.read();                                       // read in a byte as a character
-      char_buffer[char_count++] = c;                                    // add character to buffer and increment counter
+      byte c = RtcmSerial.read();                                       // read in a byte
+      byte_buffer[byte_count++] = c;                                    // add byte to buffer and increment counter
       
-      if ((c == '\n') || (char_count == sizeof(char_buffer)-1)) {       // if the buffer gets full or we see the newline character
-        ntrip_s.write((uint8_t*)char_buffer, char_count);               // send buffer to the ntrip server
-        char_count = 0;                                                 // reset counter
-        for (unsigned int i=0;i<sizeof(char_buffer);i++){               // wipe the buffer for the next loop
-          char_buffer[i] = " ";
-        //Serial.println(F("packet sent"));                             // for debugging only
+      if ((c == newline_byte) || (byte_count == sizeof(byte_buffer)-1)) {       // if the buffer gets full or we see the newline character
+        //ntrip_s.write((uint8_t*)byte_buffer, byte_count);               // send buffer to the ntrip server
+        ntrip_s.write(byte_buffer, byte_count);               // send buffer to the ntrip server
+        if (DEBUG){Serial.println(F("packet sent"));}                    // indicate sent buffer for debugging only
+        
+        byte_count = 0;                                                 // reset counter
+        for (unsigned int i=0;i<sizeof(byte_buffer);i++){               // wipe the buffer for the next loop
+          byte_buffer[i] = 0x00;
         }
       }
       
       latest_time = millis();
-      if (not rtcm1008_injected) {                                      // if the rtcm1008 flag is false (i.e. time has elapsed or message not yet injected)
-        if ((c == char(0xd3)) && (char_count + sizeof(rtcm1008) < sizeof(char_buffer)-2)) {    // if the premable byte of a message is the latest to arrive at the serial port, and there is enough room in the buffer to inject the 1008 message
-          char_count--;                                                 // decrement the buffer counter so we overwrite the preamble character
+      if ((not rtcm1008_injected) && (byte_count > 0)) {                // if the rtcm1008 flag is false (i.e. time has elapsed or message not yet injected) and there is more than zero byte in the buffer
+        if ((c == 0xd3) && (byte_count + sizeof(rtcm1008) < sizeof(byte_buffer)-2)) {    // if the premable byte of a message is the latest to arrive at the serial port, and there is enough room in the buffer to inject the 1008 message
+          if (DEBUG){Serial.println(F("preamble recognised"));}         // indicate preamble located for debugging only
+          byte_count--;                                                 // decrement the buffer counter so we overwrite the preamble character
           for (unsigned int i=0;i<sizeof(rtcm1008);i++){                // add the 1008 message bytes to the buffer 
-            char_buffer[char_count+i] = char(rtcm1008[i]);
+            byte_buffer[byte_count++] = rtcm1008[i];
           }
-          char_count = char_count + sizeof(rtcm1008);                   // correct the counter for the operations performed in the loop and adding the preamble byte below
-          char_buffer[char_count-1] = c;                                // add the preamble byte back in
+          byte_buffer[byte_count++] = c;                                // add the preamble byte back in
           rtcm1008_injected = true;                                     // set the sent flag to true so the timer gets reset to delay the next 1008 transmission
           previous_time = millis();                                     // reset the timer
         }
@@ -101,9 +106,10 @@ void loop() {
     }
   } else {                                                              // if ntrip connection fails
     ntrip_s.stop();                                                     // close current socket connection
-    char_count = 0;                                                     // reset the counter
-    for (unsigned int i=0;i<sizeof(char_buffer);i++){                   // wipe the buffer for the next loop
-      char_buffer[i] = " ";
+    byte_count = 0;                                                     // reset the counter
+    for (unsigned int i=0;i<sizeof(byte_buffer);i++){                   // wipe the buffer for the next loop
+      byte_buffer[i] = 0x00;
+    rtcm1008_injected = false;                                          // set the 1008 message flag to false
     }
     Serial.println(F("reconnect"));
     delay(1000);                                                        // prevents reconnect spam
