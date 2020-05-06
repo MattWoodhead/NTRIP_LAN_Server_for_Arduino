@@ -2,6 +2,8 @@
 
 An NTRIP Server suitable for use with an Arduino Mega 2560 and an Ethernet shield, to act as an NTRIP Server to a caster such as www.rtk2go.com.
 
+The server can inject a 1008 type message with the ADVNULLANTENNA data, so that legacy receivers may use the correction stream from a Ublox Zed-F9P based receiver (untill the next Ublox firmware update fixes this ~June 2020).
+
 This project uses a modified ntrip server class from  https://github.com/GLAY-AK2/NTRIP-server-for-Arduino
 
 ## Hardware
