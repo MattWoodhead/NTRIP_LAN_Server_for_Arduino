@@ -13,7 +13,7 @@ bool NTRIPServer::subStation(char* host,int port,char* mountpoint,char* password
     Serial.println("Request NTRIP");
     
   p += sprintf(p, "SOURCE %s %s\r\n", password, mountpoint);
-  p += sprintf(p, "Source-Agent: NTRIP Ethernet Server for Arduino\r\n");
+  p += sprintf(p, "Source-Agent: NTRIP LAN Server for Arduino - V1.0\r\n");
   p += sprintf(p, "STR: %s\r\n", info);
   p += sprintf(p, "\r\n");
 
